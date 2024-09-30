@@ -102,18 +102,16 @@
                             нескольким столбцам. По умолчанию сортировка
                             выполняется по возрастанию
                         </p>
-                        <div class="grid grid-cols-2 gap-4">
-                            <pre><code class="sql">
+                        <pre><code class="sql">
 SELECT column1, column2
 FROM table_name
 ORDER BY column1;
                     </code></pre>
-                            <pre><code class="sql">
+                        <pre><code class="sql">
 SELECT first_name, last_name, department
 FROM employees
 ORDER BY department DESC, last_name ASC;
                     </code></pre>
-                        </div>
                     </section>
                     <section>
                         <h1>ограничение количества выводимых строк</h1>
@@ -174,30 +172,45 @@ WHERE department IN (SELECT department FROM employees WHERE first_name = 'John' 
                     </section>
                     <section>
                         <h1>JOIN</h1>
-                        <p>комбинирование данных из нескольких таблиц с помощью операторов</p>
+                        <p>
+                            комбинирование данных из нескольких таблиц с помощью
+                            операторов
+                        </p>
                         <h4>Виды Join</h4>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="border-b">
                                 <code class="sql">INNER JOIN</code>
-                                <p>Возвращает строки, которые имеют совпадения в обеих таблицах</p>
+                                <p>
+                                    Возвращает строки, которые имеют совпадения
+                                    в обеих таблицах
+                                </p>
                             </div>
                             <div class="border-b">
                                 <code class="sql">LEFT JOIN</code>
                                 <span>или</span>
                                 <code class="sql">LEFT OUTER JOIN</code>
-                                <p>Возвращает все строки из левой таблицы и совпадающие строки из правой таблицы</p>
+                                <p>
+                                    Возвращает все строки из левой таблицы и
+                                    совпадающие строки из правой таблицы
+                                </p>
                             </div>
                             <div class="border-b">
                                 <code class="sql">RIGHT JOIN</code>
                                 <span>или</span>
                                 <code class="sql">RIGHT OUTER JOIN</code>
-                                <p>Возвращает все строки из правой таблицы и совпадающие строки из левой таблицы</p>
+                                <p>
+                                    Возвращает все строки из правой таблицы и
+                                    совпадающие строки из левой таблицы
+                                </p>
                             </div>
                             <div class="border-b">
                                 <code class="sql">FULL JOIN</code>
                                 <span>или</span>
                                 <code class="sql">FULL OUTER JOIN</code>
-                                <p>Возвращает строки, которые имеют совпадения в одной из таблиц</p>
+                                <p>
+                                    Возвращает строки, которые имеют совпадения
+                                    в одной из таблиц
+                                </p>
                             </div>
                         </div>
                     </section>
@@ -232,6 +245,127 @@ FULL JOIN departments d ON e.department_id = d.id;
                                 </code></pre>
                             </div>
                         </div>
+                    </section>
+                    <section>
+                        <h1>GROUP BY</h1>
+                        <p>
+                            для агрегации данных и получения сводной информации
+                            по группам
+                        </p>
+                        <pre><code class="sql">
+SELECT column1, COUNT(*)
+FROM table_name
+GROUP BY column1;
+                        </code></pre>
+                    </section>
+                    <section>
+                        <img
+                            style="background: white"
+                            src="https://www.programiz.com/sites/tutorial2program/files/sql-group-by.png"
+                            alt=""
+                            class="r-stretch" />
+                    </section>
+                    <section>
+                        <h1>Агрегатные функции</h1>
+                        <p>
+                            функции в SQL, которые применяются к набору строк и
+                            возвращают одно значение, суммирующее или обобщающее
+                            данные
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="border-b">
+                                <code class="sql">COUNT()</code>
+                                <p>
+                                    возвращает количество строк в наборе данных,
+                                    которые соответствуют заданным условиям
+                                </p>
+                                <pre><code class="sql">
+SELECT COUNT(*) 
+FROM employees;
+                                </code></pre>
+                                <p>
+                                    Этот запрос вернет количество всех
+                                    сотрудников
+                                </p>
+                            </div>
+                            <div class="border-b">
+                                <code class="sql">SUM()</code>
+                                <p>вычисляет сумму всех значений столбца</p>
+                                <pre><code class="sql">
+SELECT SUM(salary) 
+FROM employees 
+WHERE department = 'Sales';
+                                </code></pre>
+                                <p>
+                                    вернет общую сумму зарплат сотрудников
+                                    отдела продаж
+                                </p>
+                            </div>
+                        </div>
+                    </section><section>
+                        <h1>Агрегатные функции</h1>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="border-b">
+                                <code class="sql">MAX()</code>
+                                <p>возвращает максимальное значение в наборе данных</p>
+                                <pre><code class="sql">
+SELECT MAX(salary) 
+FROM employees;
+                                </code></pre>
+                                <p>вернет самую высокую зарплату</p>
+                            </div>
+                            <div class="border-b">
+                                <code class="sql">MIN()</code>
+                                <p>возвращает минимальное значение в наборе данных</p>
+                                <pre><code class="sql">
+SELECT MIN(salary) 
+FROM employees;
+                                </code></pre>
+                                <p>вернет самую низкую зарплату</p>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h1>Агрегатные функции с GROUP BY</h1>
+                        <pre><code class="sql">
+SELECT department, AVG(salary) 
+FROM employees 
+GROUP BY department;
+                        </code></pre>
+                        <p>вернет среднюю зарплату по каждому отделу</p>
+                    </section>
+                    <section>
+                        <h4>HAVING</h4>
+                        <p>используется для фильтрации результатов после применения агрегатных функций</p>
+                        <pre><code class="sql">
+SELECT department, COUNT(*) 
+FROM employees 
+GROUP BY department 
+HAVING COUNT(*) >&gt; 5;
+                        </code></pre>
+                        <p>вернет те отделы, в которых работает больше 5 сотрудников</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>Оптимизация SQL-запросов</h1>
+                        <p>процесс улучшения их производительности для ускорения выполнения и снижения нагрузки на базу данных</p>
+                    </section>
+                    <section>
+                        <h1>Индексы</h1>
+                        <p>специальные структуры данных, которые ускоряют доступ к строкам в таблице на основе значений столбцов</p>
+                        <h4>Как работают индексы</h4>
+                        <ul>
+                            <li>Индексы хранятся отдельно от основной таблицы и содержат указатели на данные, что позволяет СУБД быстрее находить нужные строки</li>
+                            <li>Индексы эффективны при фильтрации с использованием оператора WHERE, при сортировке данных и при соединениях таблиц</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h1>Пример создания индексов</h1>
+                        <pre><code class="sql">
+CREATE INDEX idx_employee_department 
+ON employees (department);
+                        </code></pre>
                     </section>
                 </section>
             </div>
@@ -423,4 +557,3 @@ FULL JOIN departments d ON e.department_id = d.id;
         </script>
     </body>
 </html>
-
