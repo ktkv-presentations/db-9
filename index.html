@@ -1,258 +1,426 @@
 <!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>reveal.js</title>
 
-	<title>reveal.js</title>
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/tokyo-night.css" />
 
-	<link rel="stylesheet" href="dist/reset.css">
-	<link rel="stylesheet" href="dist/reveal.css">
-	<link rel="stylesheet" href="dist/theme/tokyo-night.css">
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/tokyo-night.css" />
+        <link rel="stylesheet" href="plugin/chalkboard/style.css" />
+        <link rel="stylesheet" href="plugin/customcontrols/style.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
 
-	<!-- Theme used for syntax highlighted code -->
-	<link rel="stylesheet" href="plugin/highlight/tokyo-night.css">
-	<link rel="stylesheet" href="plugin/chalkboard/style.css">
-	<link rel="stylesheet" href="plugin/customcontrols/style.css">
-	<script src="https://cdn.tailwindcss.com"></script>
-</head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h1>Организация запросов на выборку</h1>
+                    <img
+                        data-type="qrcode"
+                        alt="https://ktkv-presentations.github.io/db-9" />
+                </section>
+                <section>
+                    <section>
+                        <h1>Операторы WHERE</h1>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="border-b">
+                                <h4>Оператор диапазона</h4>
+                                <code class="sql">
+                                    WHERE salary BETWEEN 40000 AND 70000;
+                                </code>
+                            </div>
+                            <div class="border-b">
+                                <h4>Оператор множества</h4>
+                                <code class="sql">
+                                    WHERE department IN ('Sales', 'HR', 'IT');
+                                </code>
+                            </div>
+                            <div class="border-b">
+                                <h4>Оператор шаблонов</h4>
+                                <code class="sql">
+                                    WHERE last_name LIKE 'S%';
+                                </code>
+                            </div>
+                            <div class="border-b">
+                                <h4>Логические операторы</h4>
+                                <code class="sql">
+                                    WHERE department = 'Sales' AND salary =
+                                    50000 OR department = 'IT';
+                                </code>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h1>Примеры шаблонов</h1>
+                        <div class="grid grid-cols-2 gap-4">
+                            <p>
+                                <code>%</code>
+                                - любое количество символов, включая ноль
+                            </p>
+                            <p>
+                                <code>_</code>
+                                - любой одиночный символ
+                            </p>
+                            <div class="border-b">
+                                <div>имена начинаются с буквы "A"</div>
+                                <code class="sql">
+                                    WHERE first_name LIKE 'A%';
+                                </code>
+                            </div>
+                            <div class="border-b">
+                                <div>
+                                    названия которых заканчиваются на "ia"
+                                </div>
+                                <code class="sql">
+                                    WHERE product_name LIKE '%ia';
+                                </code>
+                            </div>
+                            <div style="grid-column: span 2" class="border-b">
+                                <div>в фамилии вторая буква "o"</div>
+                                <code class="sql">
+                                    WHERE last_name LIKE '_o%';
+                                </code>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>сортировка данных</h1>
+                        <h4>ORDER BY</h4>
+                        <p>
+                            сортировка результатов запроса по одному или
+                            нескольким столбцам. По умолчанию сортировка
+                            выполняется по возрастанию
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <pre><code class="sql">
+SELECT column1, column2
+FROM table_name
+ORDER BY column1;
+                    </code></pre>
+                            <pre><code class="sql">
+SELECT first_name, last_name, department
+FROM employees
+ORDER BY department DESC, last_name ASC;
+                    </code></pre>
+                        </div>
+                    </section>
+                    <section>
+                        <h1>ограничение количества выводимых строк</h1>
+                        <h4>LIMIT</h4>
+                        <p>
+                            позволяет ограничить количество строк, возвращаемых
+                            запросом
+                        </p>
+                        <pre><code class="sql">
+SELECT first_name, last_name
+FROM employees
+LIMIT 5;
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h1>OFFSET</h1>
+                        <h4>
+                            <code class="sql">OFFSET</code>
+                            используется совместно с
+                            <code class="sql">LIMIT</code>
+                            , чтобы пропустить определенное количество строк
+                            перед началом возврата данных
+                        </h4>
+                        <p></p>
+                        <pre><code class="sql">
+SELECT column1, column2
+FROM table_name
+LIMIT number_of_rows OFFSET number_to_skip;
+                        </code></pre>
+                        <p>
+                            <code>number_to_skip</code>
+                            - количество строк, которые следует пропустить перед
+                            выборкой
+                        </p>
+                    </section>
+                    <section>
+                        <h1>подзапросы</h1>
+                        <p>
+                            позволяют использовать результаты одного запроса в
+                            другом с помощью ключевого слова IN
+                        </p>
+                        <pre><code class="sql">
+SELECT column1, column2 
+FROM table_name 
+WHERE column_name IN (SELECT column_name FROM table_name WHERE condition);
+                        </code></pre>
+                    </section>
+                    <section>
+                        <p>
+                            Запрос для извлечения сотрудников, работающих в тех
+                            же отделах, что и "John Doe"
+                        </p>
+                        <pre><code class="sql">
+SELECT first_name, last_name 
+FROM employees 
+WHERE department IN (SELECT department FROM employees WHERE first_name = 'John' AND last_name = 'Doe');
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h1>JOIN</h1>
+                        <p>комбинирование данных из нескольких таблиц с помощью операторов</p>
+                        <h4>Виды Join</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="border-b">
+                                <code class="sql">INNER JOIN</code>
+                                <p>Возвращает строки, которые имеют совпадения в обеих таблицах</p>
+                            </div>
+                            <div class="border-b">
+                                <code class="sql">LEFT JOIN</code>
+                                <span>или</span>
+                                <code class="sql">LEFT OUTER JOIN</code>
+                                <p>Возвращает все строки из левой таблицы и совпадающие строки из правой таблицы</p>
+                            </div>
+                            <div class="border-b">
+                                <code class="sql">RIGHT JOIN</code>
+                                <span>или</span>
+                                <code class="sql">RIGHT OUTER JOIN</code>
+                                <p>Возвращает все строки из правой таблицы и совпадающие строки из левой таблицы</p>
+                            </div>
+                            <div class="border-b">
+                                <code class="sql">FULL JOIN</code>
+                                <span>или</span>
+                                <code class="sql">FULL OUTER JOIN</code>
+                                <p>Возвращает строки, которые имеют совпадения в одной из таблиц</p>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="grid gric-cols-2 gap-4">
+                            <div class="border-b">
+                                <pre><code class="sql">
+SELECT e.first_name, e.last_name, d.department_name 
+FROM employees e 
+INNER JOIN departments d ON e.department_id = d.id;
+                                </code></pre>
+                            </div>
+                            <div class="border-b">
+                                <pre><code class="sql">
+SELECT e.first_name, e.last_name, d.department_name 
+FROM employees e 
+LEFT JOIN departments d ON e.department_id = d.id;
+                                </code></pre>
+                            </div>
+                            <div class="border-b">
+                                <pre><code class="sql">
+SELECT e.first_name, e.last_name, d.department_name 
+FROM employees e 
+RIGHT JOIN departments d ON e.department_id = d.id;
+                                </code></pre>
+                            </div>
+                            <div class="border-b">
+                                <pre><code class="sql">
+SELECT e.first_name, e.last_name, d.department_name 
+FROM employees e 
+FULL JOIN departments d ON e.department_id = d.id;
+                                </code></pre>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </div>
+        </div>
 
-<body>
-	<div class="reveal">
-		<div class="slides">
-			<section>
-				<h1>
-					Beautiful presentations
-				</h1>
-				<h2>New features</h2>
-				<ul>
-					<li>Nerd icons </li>
-					<li><code class="js">(inline) => code("highlighting")</code></li>
-					<li>Automatic QR Code generation</li>
-					<li>and much more!</li>
-				</ul>
-			</section>
-			<section>
-				<h1>
-					Custom TokyoNight theme
-				</h1>
-				<h2 class="fragment">That has</h2>
-				<h3 class="fragment">Multi</h3>
-				<h4 class="fragment">Level</h4>
-				<h5 class="fragment">Heading</h5>
-				<h6 class="fragment">Coloring</h6>
-				<h6>Thanks to this project <a href="https://github.com/tcmmichaelb139/obsidian-tokyonight"></a> for the
-					colorscheme!</h6>
-			</section>
-			<section>
-				<section>
-					<h1>Tailwind CSS</h1>
-					<div class="grid grid-cols-2 gap-8">
-						<div>
-							<h5>Lorem, ipsum.</h5>
-							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error quod fugiat harum modi laboriosam
-								dignissimos, maxime possimus? Error, nihil in.</p>
-						</div>
-						<div>
-							<h5>Lorem, ipsum.</h5>
-							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error quod fugiat harum modi laboriosam
-								dignissimos, maxime possimus? Error, nihil in.</p>
-						</div>
-						<div class="col-span-2">
-							<h5>Lorem, ipsum.</h5>
-							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error quod fugiat harum modi laboriosam
-								dignissimos, maxime possimus? Error, nihil in.</p>
-						</div>
-					</div>
-				</section>
-				<section>
-					<h1>Custom classes</h1>
-					<div class="grid grid-cols-3 gap-8">
-						<div class="border-r">
-							<h5>border-r</h5>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum, soluta!</p>
-						</div>
-						<div class="border-o">
-							<h5>border-o</h5>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum, soluta!</p>
-						</div>
-						<div class="border-y">
-							<h5>border-y</h5>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum, soluta!</p>
-						</div>
-					</div>
-				</section>
-			</section>
-			<section>
-				<section data-auto-animate>
-					<h1>New code highlighting!</h1>
-					<div>
-						Now also has Tokyo Night <code>highlight.js</code> highlighting implementation
-					</div>
-					<pre><code data-trim data-noescape>
-var foo = {
-    bar: function () {
-             alert("Hello, World!");
-         }
-};	
-					</code></pre>
-				</section>
-				<section data-auto-animate>
-					<h1>New code highlighting!</h1>
-					<h5>Inline code highlighting is now also supported!</h5>
-					<p>
-						Just wrap your code with <code>&lt;code&gt;</code> tag and get
-						highlighting like this <code class="js">const foo = () => {return bar}</code>!
-					</p>
-				</section>
-			</section>
-			<section>
-				<h1>Mermaid for beautiful diagrams!</h1>
-				<div class="mermaid">
-					<pre>
-						erDiagram
-    CUSTOMER ||--o{ ORDER : ""
-    CUSTOMER {
-        string name
-        string custNumber
-        string sector
-    }
-    ORDER ||--|{ LINE-ITEM : contains
-    ORDER {
-        int orderNumber
-        string deliveryAddress
-    }
-    LINE-ITEM {
-        string productCode
-        int quantity
-        float pricePerUnit
-    }
-    ORDER ||--|{ STUDENT : contains
-    STUDENT {
-        int orderNumber
-        string deliveryAddress
-    }
-						</pre>
-				</div>
-				<h4>Check documentation <a href="https://mermaid.js.org/config/usage.html">here</a>!</h4>
-			</section>
-			<section>
-				<h1>Now supports Nerd font icons!</h1>
-				<div>Nerdy project that adds icons to font itself</div>
-				<h6>Checkout their site for icons like this <a href="https://www.nerdfonts.com/">󰖟</a>!
-				</h6>
-			</section>
-			<section>
-				<h1>Now supports automatic QRCode generation!</h1>
-				<div>With GoQR you can just add data-type and alt attributes to your <code
-						class="html">&lt;img alt="https://goqr.me/" data-type="qrcode" / &gt;</code> tag!</div>
-				<img class="r-stretch" alt="https://goqr.me/" data-type="qrcode" />
-				</h6>
-			</section>
-			<section>
-				<h1>New changes on the way!</h1>
-			</section>
-		</div>
-	</div>
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/qrcode/qrcode.js"></script>
+        <script src="plugin/mermaid/mermaid.js"></script>
+        <script src="plugin/chalkboard/plugin.js"></script>
+        <script src="plugin/customcontrols/plugin.js"></script>
 
-	<script src="dist/reveal.js"></script>
-	<script src="plugin/notes/notes.js"></script>
-	<script src="plugin/markdown/markdown.js"></script>
-	<script src="plugin/highlight/highlight.js"></script>
-	<script src="plugin/qrcode/qrcode.js"></script>
-	<script src="plugin/mermaid/mermaid.js"></script>
-	<script src="plugin/chalkboard/plugin.js"></script>
-	<script src="plugin/customcontrols/plugin.js"></script>
+        <script>
+            tailwind.config = {
+                corePlugins: {
+                    preflight: false,
+                },
+            }
+        </script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
 
-	<script>
-		tailwind.config = {
-			corePlugins: {
-				preflight: false,
-			}
-		}
-	</script>
-	<script>
-		// More info about initialization & config:
-		// - https://revealjs.com/initialization/
-		// - https://revealjs.com/config/
+            const colors = {
+                blue0: 'rgb(61, 89, 161)',
+                blue: 'rgb(122, 162, 247)',
+                cyan: 'rgb(125, 207, 255)',
+                magenta: 'rgb(187, 154, 247)',
+                orange: 'rgb(255, 158, 100)',
+                yellow: 'rgb(224, 175, 104)',
+                green: 'rgb(158, 206, 106)',
+                teal: 'rgb(26, 188, 156)',
+                red: 'rgb(255, 117, 127)',
+                red1: 'rgb(219, 75, 75)',
+                fg: 'rgb(192, 202, 245)',
+                bg: 'rgb(26, 27, 38)',
+                transparent: '#00000000',
+            }
 
-		const colors = {
-			blue0: 'rgb(61, 89, 161)',
-			blue: 'rgb(122, 162, 247)',
-			cyan: 'rgb(125, 207, 255)',
-			magenta: 'rgb(187, 154, 247)',
-			orange: 'rgb(255, 158, 100)',
-			yellow: 'rgb(224, 175, 104)',
-			green: 'rgb(158, 206, 106)',
-			teal: 'rgb(26, 188, 156)',
-			red: 'rgb(255, 117, 127)',
-			red1: 'rgb(219, 75, 75)',
-			fg: 'rgb(192, 202, 245)',
-			bg: 'rgb(26, 27, 38)',
-			transparent: "#00000000"
-		};
-
-		Reveal.initialize({
-			hash: true,
-			// Learn about plugins: https://revealjs.com/plugins/
-			plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMermaid, RevealChalkboard, RevealCustomControls],
-			slideNumber: true,
-			customcontrols: {
-				controls: [
-					{
-						icon: '<div></div>',
-						title: 'Clear canvas (DEL)',
-						action: 'RevealChalkboard.clear();'
-					},
-					{
-						icon: '<div></div>',
-						title: 'Toggle chalkboard (B)',
-						action: 'RevealChalkboard.toggleChalkboard();'
-					},
-					{
-						icon: '<div></div>',
-						title: 'Toggle notes canvas (C)',
-						action: 'RevealChalkboard.toggleNotesCanvas();'
-					}
-				],
-			},
-			chalkboard: {
-				boardmarkerWidth: 5,
-				boardmarkers: [
-					{ color: colors.bg, cursor: 'url(' + path + 'img/boardmarker-black.png), auto' },
-					{ color: colors.fg, cursor: 'url(' + path + 'img/boardmarker-black.png), auto' },
-					{ color: colors.blue, cursor: 'url(' + path + 'img/boardmarker-black.png), auto' },
-					{ color: colors.red, cursor: 'url(' + path + 'img/boardmarker-black.png), auto' },
-					{ color: colors.green, cursor: 'url(' + path + 'img/boardmarker-black.png), auto' },
-					{ color: colors.yellow, cursor: 'url(' + path + 'img/boardmarker-black.png), auto' },
-					{ color: colors.teal, cursor: 'url(' + path + 'img/boardmarker-black.png), auto' },
-					{ color: colors.orange, cursor: 'url(' + path + 'img/boardmarker-black.png), auto' },
-				],
-				chalks: [
-					{ color: colors.bg, cursor: 'url(' + path + 'img/chalk-white.png), auto' },
-					{ color: colors.fg, cursor: 'url(' + path + 'img/chalk-white.png), auto' },
-					{ color: colors.blue, cursor: 'url(' + path + 'img/chalk-white.png), auto' },
-					{ color: colors.red, cursor: 'url(' + path + 'img/chalk-white.png), auto' },
-					{ color: colors.green, cursor: 'url(' + path + 'img/chalk-white.png), auto' },
-					{ color: colors.yellow, cursor: 'url(' + path + 'img/chalk-white.png), auto' },
-					{ color: colors.teal, cursor: 'url(' + path + 'img/chalk-white.png), auto' },
-					{ color: colors.orange, cursor: 'url(' + path + 'img/chalk-white.png), auto' },
-				]
-			},
-			mermaid: {
-				securityLevel: 'loose',
-				theme: "dark",
-				themeVariables: {
-					darkMode: true,
-					textColor: colors.fg,
-					background: colors.bg,
-					mainBkg: colors.bg,
-					lineColor: colors.fg,
-				}
-			}
-		});
-	</script>
-</body>
-
+            Reveal.initialize({
+                hash: true,
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                    RevealChalkboard,
+                    RevealCustomControls,
+                ],
+                slideNumber: true,
+                customcontrols: {
+                    controls: [
+                        {
+                            icon: '<div></div>',
+                            title: 'Clear canvas (DEL)',
+                            action: 'RevealChalkboard.clear();',
+                        },
+                        {
+                            icon: '<div></div>',
+                            title: 'Toggle chalkboard (B)',
+                            action: 'RevealChalkboard.toggleChalkboard();',
+                        },
+                        {
+                            icon: '<div></div>',
+                            title: 'Toggle notes canvas (C)',
+                            action: 'RevealChalkboard.toggleNotesCanvas();',
+                        },
+                    ],
+                },
+                chalkboard: {
+                    boardmarkerWidth: 5,
+                    boardmarkers: [
+                        {
+                            color: colors.bg,
+                            cursor:
+                                'url(' +
+                                path +
+                                'img/boardmarker-black.png), auto',
+                        },
+                        {
+                            color: colors.fg,
+                            cursor:
+                                'url(' +
+                                path +
+                                'img/boardmarker-black.png), auto',
+                        },
+                        {
+                            color: colors.blue,
+                            cursor:
+                                'url(' +
+                                path +
+                                'img/boardmarker-black.png), auto',
+                        },
+                        {
+                            color: colors.red,
+                            cursor:
+                                'url(' +
+                                path +
+                                'img/boardmarker-black.png), auto',
+                        },
+                        {
+                            color: colors.green,
+                            cursor:
+                                'url(' +
+                                path +
+                                'img/boardmarker-black.png), auto',
+                        },
+                        {
+                            color: colors.yellow,
+                            cursor:
+                                'url(' +
+                                path +
+                                'img/boardmarker-black.png), auto',
+                        },
+                        {
+                            color: colors.teal,
+                            cursor:
+                                'url(' +
+                                path +
+                                'img/boardmarker-black.png), auto',
+                        },
+                        {
+                            color: colors.orange,
+                            cursor:
+                                'url(' +
+                                path +
+                                'img/boardmarker-black.png), auto',
+                        },
+                    ],
+                    chalks: [
+                        {
+                            color: colors.bg,
+                            cursor:
+                                'url(' + path + 'img/chalk-white.png), auto',
+                        },
+                        {
+                            color: colors.fg,
+                            cursor:
+                                'url(' + path + 'img/chalk-white.png), auto',
+                        },
+                        {
+                            color: colors.blue,
+                            cursor:
+                                'url(' + path + 'img/chalk-white.png), auto',
+                        },
+                        {
+                            color: colors.red,
+                            cursor:
+                                'url(' + path + 'img/chalk-white.png), auto',
+                        },
+                        {
+                            color: colors.green,
+                            cursor:
+                                'url(' + path + 'img/chalk-white.png), auto',
+                        },
+                        {
+                            color: colors.yellow,
+                            cursor:
+                                'url(' + path + 'img/chalk-white.png), auto',
+                        },
+                        {
+                            color: colors.teal,
+                            cursor:
+                                'url(' + path + 'img/chalk-white.png), auto',
+                        },
+                        {
+                            color: colors.orange,
+                            cursor:
+                                'url(' + path + 'img/chalk-white.png), auto',
+                        },
+                    ],
+                },
+                mermaid: {
+                    securityLevel: 'loose',
+                    theme: 'dark',
+                    themeVariables: {
+                        darkMode: true,
+                        textColor: colors.fg,
+                        background: colors.bg,
+                        mainBkg: colors.bg,
+                        lineColor: colors.fg,
+                    },
+                },
+            })
+        </script>
+    </body>
 </html>
+
